@@ -5,7 +5,7 @@ import { erc1155UriToImage } from "@/ipfs/ipfs";
 import { IPFS_API } from "@/ipfs/ipfs-enums";
 import { get1155Uri } from "@/viem/read";
 import { NextApiResponse } from "next";
-import { NextRequest } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 
 const title = "ipfs timer";
 const frameVersion = "vNext";
@@ -15,16 +15,29 @@ const frameVersion = "vNext";
 export async function GET() {
     const buttonNames = ["Cloudflare", "dweb.link", "ipfs.io", "Pinata"];
     const postUrl = process.env["HOST"] + `/api/timer`;
-    const frameImageUrl =
-        process.env["HOST"] + `/title.png`;
-    return frame200Response(title, frameVersion, frameImageUrl, postUrl, buttonNames)
+    const frameImageUrl = process.env["HOST"] + `/title.png`;
+    return frame200Response(
+        title,
+        frameVersion,
+        frameImageUrl,
+        postUrl,
+        buttonNames
+    );
 }
 
-export async function POST(req: NextRequest, res: NextApiResponse) {
-    const searchParams = req.nextUrl.searchParams
-    if (searchParams.get("reset") == "true")
-    {
-        res.redirect(303, '/api/timer')
+export async function POST(req: NextRequest, res: NextResponse) {
+    const searchParams = req.nextUrl.searchParams;
+    if (searchParams.get("reset") == "true") {
+        const buttonNames = ["Cloudflare", "dweb.link", "ipfs.io", "Pinata"];
+        const postUrl = process.env["HOST"] + `/api/timer`;
+        const frameImageUrl = process.env["HOST"] + `/title.png`;
+        return frame200Response(
+            title,
+            frameVersion,
+            frameImageUrl,
+            postUrl,
+            buttonNames
+        );
     }
     const body = await req.json();
     const buttonIndex = body.untrustedData.buttonIndex;
@@ -38,11 +51,12 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
     const buttonNames = ["Reset"];
 
     // Make Zora API call
-    const ZAIBS_CA = "0x040cABdDC5C1Ed83B66e0126E74E7F97e6eC36BC"
-    const zaibsTransfersReqUrl = ZORA_API_URL + "/tokens/" + ZAIBS_CA + "/transfers"
+    const ZAIBS_CA = "0x040cABdDC5C1Ed83B66e0126E74E7F97e6eC36BC";
+    const zaibsTransfersReqUrl =
+        ZORA_API_URL + "/tokens/" + ZAIBS_CA + "/transfers";
     const zoraApiResponse = await fetch(zaibsTransfersReqUrl);
     const resBody: TransfersResposeBody = await zoraApiResponse.json();
-    const mints = resBody.items.filter(tx => tx.type == "token_minting");
+    const mints = resBody.items.filter((tx) => tx.type == "token_minting");
     const latestMint = mints[0];
     const tokenId = latestMint.total.token_id;
     // const addy = latestMint.to.hash;
@@ -65,13 +79,13 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
             }, timeoutMillis);
         });
 
-        const startTime = performance.now();    // START TIMER
+        const startTime = performance.now(); // START TIMER
         // Data promise
         const dataPromise = erc1155UriToImage(tokenUri, ipfsApi);
 
         // Wait for data or timeout
         const result = await Promise.race([dataPromise, timeoutPromise]);
-        const endTime = performance.now();      // END TIMER
+        const endTime = performance.now(); // END TIMER
         const timeTaken = endTime - startTime;
 
         console.log(`Time taken to retrieve IPFS: ${timeTaken.toFixed(2)} ms`);
@@ -80,18 +94,35 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
         // Create frame image
         const frameImageUrl =
             process.env["HOST"] +
-            `/api/image/timer-result?timeTaken=${timeTaken.toFixed(2)}&tokenImgUrl=${result}&ipfsApi=${ipfsApi}&date=${Date.now()}}`
-        const postUrl = process.env['HOST'] + '/api/timer?reset=true';
-        return frame200Response(title, frameVersion, frameImageUrl, postUrl, buttonNames)
+            `/api/image/timer-result?timeTaken=${timeTaken.toFixed(
+                2
+            )}&tokenImgUrl=${result}&ipfsApi=${ipfsApi}&date=${Date.now()}}`;
+        const postUrl = process.env["HOST"] + "/api/timer?reset=true";
+        return frame200Response(
+            title,
+            frameVersion,
+            frameImageUrl,
+            postUrl,
+            buttonNames
+        );
     } catch (error: any) {
         // Handle errors
         console.error(error.message);
 
-        const postUrl = process.env['HOST'] + "/api/timer?reset=true";
+        const postUrl = process.env["HOST"] + "/api/timer?reset=true";
         const frameImageUrl = error.message.includes("Timeout")
-            ? process.env['HOST'] + `/api/image/timer-error?timeout=${timeoutMillis.toFixed(2)}&ipfsApi=${ipfsApi}&date=${Date.now()}`
-            : process.env['HOST'] + `/api/image/timer-error`;
+            ? process.env["HOST"] +
+              `/api/image/timer-error?timeout=${timeoutMillis.toFixed(
+                  2
+              )}&ipfsApi=${ipfsApi}&date=${Date.now()}`
+            : process.env["HOST"] + `/api/image/timer-error`;
 
-        return frame200Response(title, frameVersion, frameImageUrl, postUrl, buttonNames)
+        return frame200Response(
+            title,
+            frameVersion,
+            frameImageUrl,
+            postUrl,
+            buttonNames
+        );
     }
 }
