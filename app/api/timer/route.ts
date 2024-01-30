@@ -15,7 +15,6 @@ const frameVersion = "vNext";
 export async function GET() {
     const buttonNames = ["Cloudflare", "dweb.link", "ipfs.io", "Pinata"];
     const postUrl = process.env["HOST"] + `/api/timer`;
-    const cta = "Time an endpoint";
     const frameImageUrl =
         process.env["HOST"] + `/title.png`;
     return frame200Response(title, frameVersion, frameImageUrl, postUrl, buttonNames)
@@ -81,7 +80,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
         // Create frame image
         const frameImageUrl =
             process.env["HOST"] +
-            `/api/image/timer-result?timeTaken="${timeTaken}"&tokenImgUrl="${result}"&ipfsApi="${ipfsApi}"&date="${Date.now().toFixed(2)}"}`
+            `/api/image/timer-result?timeTaken=${timeTaken.toFixed(2)}&tokenImgUrl=${result}&ipfsApi=${ipfsApi}&date=${Date.now()}}`
         const postUrl = process.env['HOST'] + '/api/timer?reset=true';
         return frame200Response(title, frameVersion, frameImageUrl, postUrl, buttonNames)
     } catch (error: any) {
