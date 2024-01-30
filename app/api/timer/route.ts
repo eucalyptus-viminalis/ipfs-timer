@@ -89,8 +89,8 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
 
         const postUrl = process.env['HOST'] + "/api/timer?reset=true";
         const frameImageUrl = error.message.includes("Timeout")
-            ? process.env['HOST'] + `/api/image/stopwatch-error?timeout=${timeoutMillis.toFixed(2)}&ipfsApi=${ipfsApi}&date=${Date.now()}`
-            : process.env['HOST'] + `/api/image/stopwatch-error`;
+            ? process.env['HOST'] + `/api/image/timer-error?timeout=${timeoutMillis.toFixed(2)}&ipfsApi=${ipfsApi}&date=${Date.now()}`
+            : process.env['HOST'] + `/api/image/timer-error`;
 
         return frame200Response(title, frameVersion, frameImageUrl, postUrl, buttonNames)
     }
