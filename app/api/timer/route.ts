@@ -24,7 +24,7 @@ export async function POST(req: NextRequest, res: NextApiResponse) {
     const searchParams = req.nextUrl.searchParams
     if (searchParams.get("reset") == "true")
     {
-        res.redirect(302, '/api/timer')
+        res.redirect(303, '/api/timer')
     }
     const body = await req.json();
     const buttonIndex = body.untrustedData.buttonIndex;
