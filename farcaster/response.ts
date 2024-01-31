@@ -23,6 +23,7 @@ export function frame200Response(title: string, frameVersion: string, frameImage
             <dt>Code</dt>
             <dd><a href="https://github.com/eucalyptus-viminalis/ipfs-timer">GitHub</a></dd>
           </dl>
+          <hr>
           <p>Built by 3070 (<a href="https://warpcast.com/3070">Warpcast Profile</a>)
         </body>
       </html>
