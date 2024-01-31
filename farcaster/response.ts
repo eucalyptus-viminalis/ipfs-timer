@@ -14,7 +14,17 @@ export function frame200Response(title: string, frameVersion: string, frameImage
             (bn, i) => `<meta name="fc:frame:button:${i+1}" content="${bn}" />`
           )}
         </head>
-        <body><p>yo</p></body>
+        <body>
+          <h1>ipfs timer</h1>
+          <p>Farcaster Frame for measuring IPFS gateway latency</p>
+          <dl>
+            <dt>In action</dt>
+            <dd><a href="https://warpcast.com/3070/0x07bf940d">https://warpcast.com/3070/0x07bf940d</a></dd>
+            <dt>Code</dt>
+            <dd><a href="https://github.com/eucalyptus-viminalis/ipfs-timer">GitHub</a></dd>
+          </dl>
+          <p>Built by 3070 (<a href="https://warpcast.com/3070">Warpcast Profile</a>)
+        </body>
       </html>
     `;
   
