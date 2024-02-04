@@ -4,6 +4,10 @@
 
 A simple Farcaster Frame server, and a collection of routes, for timing various IPFS gateways. Built with _Next.js_ "appdir".
 
+## In action
+
+See it in action on warpcast: https://warpcast.com/3070/0x07bf940d
+
 ## Technologies
 
 - _IPFS_: A protocol for creating content-addressed data
